@@ -1,5 +1,5 @@
 ---
-cssClass: reference
+cssclasses: reference
 ---
 This page lists CSS variables for [Properties](https://help.obsidian.md/Editing+and+formatting/Properties), the YAML metadata editor for frontmatter. See also [[Checkbox]], [[Text input]] and [[Multi-select]] for variables related to the input types.
 
@@ -31,12 +31,14 @@ These variables apply to individual properties in the list.
 | `--metadata-divider-color-hover`        | Color of dividers when property (hover)   |
 | `--metadata-divider-color-focus`        | Color of dividers when property (focused) |
 | `--metadata-divider-width`              | Width of divider lines                    |
-| `--metadata-property-padding`           | Property adding                           |
+| `--metadata-property-padding`           | Property padding                          |
 | `--metadata-property-radius`            | Property corner radius                    |
+| `--metadata-property-radius-hover`      | Property corner radius (hover)            |
+| `--metadata-property-radius-focus`      | Property corner radius (focus)            |
 | `--metadata-property-background`        | Property background color                 |
 | `--metadata-property-background-hover`  | Property background color (hover)         |
 | `--metadata-property-background-active` | Property background color (active)        |
-| `--metadata-label-background-hover`     | Property label background color(hover)    |
+| `--metadata-label-background-hover`     | Property label background color (hover)   |
 | `--metadata-label-background-active`    | Property label background color (active)  |
 | `--metadata-label-font-size`            | Property label font size                  |
 | `--metadata-label-font-weight`          | Property label font weight                |

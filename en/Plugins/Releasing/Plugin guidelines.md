@@ -13,6 +13,23 @@ Avoid using the global app object, `app` (or `window.app`). Instead, use the ref
 
 The global app object is intended for debugging purposes and might be removed in the future.
 
+### Avoid unnecessary logging to console
+
+Please avoid unnecessary logging.
+In it's default configuration, the developer console should only show error messages, debug messages should not be shown.
+
+### Consider organizing your code base using folders
+
+If your plugin uses more than one `.ts` file, consider organizing them into folders to make it easier to review and maintain.
+
+### Rename placeholder class names
+
+The sample plugin contains placeholder names for common classes, such as `MyPlugin`, `MyPluginSettings`, and `SampleSettingTab`. Rename these to reflect the name of your plugin.
+
+## Mobile
+![[Mobile development#Node and Electron APIs]]
+
+![[Mobile development#Lookbehind in regular expressions]]
 ## UI text
 
 This section lists guidelines for formatting text in the user interface, such as settings, commands, and buttons.
@@ -33,7 +50,7 @@ Avoid adding a top-level heading in the settings tab, such as "General", "Settin
 
 If you have more than one section under settings, and one contains general settings, keep them at the top without adding a heading.
 
-For example, look at the settings under **Settings → Appearance**:
+For example, look at the settings under **Settings → Appearance**.
 
 ### Avoid "settings" in settings headings
 
@@ -49,6 +66,13 @@ Any text in UI elements should be using [Sentence case](https://en.wiktionary.or
 - Prefer "Template folder location" over "Template Folder Location".
 - Prefer "Create new note" over "Create New Note".
 
+### Use `setHeading` instead of a `<h1>`, `<h2>`
+
+Using the heading elements from HTML will result in inconsistent styling between different plugins.
+Instead you should prefer the following:
+```ts
+new Setting(containerEl).setName('your heading title').setHeading();
+```
 ## Security
 
 ### Avoid `innerHTML`, `outerHTML` and `insertAdjacentHTML`
@@ -67,6 +91,8 @@ function showName(name: string) {
 
 Instead, use the DOM API or the Obsidian helper functions, such as `createEl()`, `createDiv()` and `createSpan()` to build the DOM element programmatically. For more information, refer to [[HTML elements]].
 
+To cleanup a HTML elements contents use `el.empty();`
+
 ## Resource management
 
 ### Clean up resources when plugin unloads
@@ -78,7 +104,7 @@ When possible, use methods like [[registerEvent|registerEvent()]] or [[addComman
 ```ts
 export default class MyPlugin extends Plugin {
   onload() {
-    this.registerEvent(this.app.vault.on("create", this.onCreate));
+    this.registerEvent(this.app.vault.on('create', this.onCreate));
   }
 
   onCreate: (file: TAbstractFile) => {
@@ -129,7 +155,11 @@ if (view) {
 If you want to access the editor in the active note, use `activeEditor` instead:
 
 ```ts
-const editor = this.app.workspace.activeEditor;
+const editor = this.app.workspace.activeEditor?.editor;
+
+if (editor) {
+    // ...
+}
 ```
 
 ### Avoid managing references to custom views
@@ -161,7 +191,7 @@ for (let leaf of app.workspace.getActiveLeavesOfType(MY_VIEW_TYPE)) {
 
 ## Vault
 
-### Prefer the Editor API instead of `Vault.modify`
+### Prefer the Editor API instead of `Vault.modify` to the active file
 
 If you want to edit an active note, use the [[Editor]] interface instead of [[Vault/modify|Vault.modify()]].
 
@@ -169,7 +199,18 @@ Editor maintains information about the active note, such as cursor position, sel
 
 Editor is also more efficient when making small changes to parts of the note.
 
-Only use [[Vault/modify|Vault.modify()]] if you're editing a file in the background.
+### Prefer `Vault.process` instead of `Vault.modify` to modify a file in the background
+
+If you want to edit a note that is not currently opened, use the [[Reference/TypeScript API/Vault/process|Vault.process]] function instead of [[modify|Vault.modify]].
+
+The `process` function modifies the file atomically, which means that your plugin won't run into conflicts with other plugins modifying the same file.
+
+### Prefer `FileManager.processFrontMatter` to modify frontmatter of a note
+
+Instead of extracting the frontmatter of a note, parsing and modifying the YAML manually you should use the [[processFrontMatter|FileManager.processFrontMatter]] function.
+
+`processFrontMatter` runs atomically, so modifying the file will not conflict with other plugins editing the same file.
+It will also ensure a consistent layout of the YAML produced.
 
 ### Prefer the Vault API over the Adapter API
 
@@ -182,24 +223,37 @@ While the file operations in the Adapter API are often more familiar to many dev
 
 ### Avoid iterating all files to find a file by its path
 
-This is inefficient, especially for large vaults. Use [[Vault/getAbstractFileByPath|getAbstractFileByPath()]] instead.
+This is inefficient, especially for large vaults. Use [[getFileByPath|Vault.getFileByPath]], [[getFolderByPath|Vault.getFolderByPath]] or [[getAbstractFileByPath|Vault.getAbstractFileByPath]] instead.
 
 **Don't** do this:
 
 ```ts
-vault.getAllFiles().find(file => file.path === filePath)
+this.app.vault.getFiles().find(file => file.path === filePath);
 ```
 
 Do this instead:
 
 ```ts
 const filePath = 'folder/file.md';
+// if you want to get a file
+const file = this.app.vault.getFileByPath(filePath);
+```
 
-const file = app.vault.getAbstractFileByPath(filePath);
+```ts
+const folderPath = 'folder';
+// or if you want to get a folder
+const folder = this.app.vault.getFolderByPath(folderPath);
+```
 
-// Check if it exists and is of the correct type
+If you aren't sure if the path provided is for a folder or a file, use:
+```ts
+const abstractFile = this.app.vault.getAbstractFileByPath(filePath);
+
 if (file instanceof TFile) {
-  // file is automatically casted to TFile within this scope.
+	// it's a file
+}
+if (file instanceof TFolder) {
+	// it's a folder
 }
 ```
 
@@ -215,9 +269,9 @@ Use [[normalizePath|normalizePath()]] whenever you accept user-defined paths to 
 - Runs the path through [String.prototype.normalize](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize).
 
 ```ts
-import { normalizePath } from "obsidian";
-const pathToPlugin = normalizePath(app.vault.configDir + "//plugins/my-plugin");
-// pathToPlugin contains ".obsidian/plugins/my-plugin" not .obsidian//plugins/my-plugin
+import { normalizePath } from 'obsidian';
+const pathToPlugin = normalizePath('//my-folder\file');
+// pathToPlugin contains "my-folder/file" not "//my-folder\"
 ```
 
 ## Editor
@@ -252,6 +306,37 @@ class MyPlugin extends Plugin {
 }
 
 ```
+## Styling
+
+### No hardcoded styling
+
+**Don't** do this:
+
+```ts
+const el = containerEl.createDiv();
+el.style.color = 'white';
+el.style.backgroundColor = 'red';
+```
+
+To make it easy for users to modify the styling of your plugin you should use CSS classes, as hardcoding the styling in the plugin code makes it impossible to modify with themes and snippets.
+
+**Do** this instead:
+
+```ts
+const el = containerEl.createDiv({cls: 'warning-container'});
+```
+
+ In the plugins CSS add the following:
+
+```css
+.warning-container {
+	color: var(--text-normal);
+	background-color: var(--background-modifier-error);
+}
+```
+
+To make the styling of your plugin consistent with Obsidian and other plugins you should use the [[CSS variables]] provided by Obsidian.
+If there is no variable available that fits in your case, you can create your own.
 
 ## TypeScript
 
@@ -291,11 +376,3 @@ async function AsyncTest(): Promise<string | null> {
   }
 }
 ```
-
-### Consider organizing your code base using folders
-
-If your plugin uses more than one `.ts` file, consider organizing them into folders to make it easier to review and maintain.
-
-### Rename placeholder class names
-
-The sample plugin contains placeholder names for common classes, such as `MyPlugin`, `MyPluginSettings`, and `SampleSettingTab`. Rename these to reflect the name of your plugin.

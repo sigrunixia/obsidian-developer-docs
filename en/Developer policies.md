@@ -2,6 +2,8 @@ Our goal for community plugins and themes is to make it easy for users to safely
 
 All community plugins and themes added to the Obsidian directory must respect the following policies. Every plugin and theme is individually vetted before being included in the directory. Plugins and themes that don't follow these policies will be removed from the directory.
 
+These policies only apply to plugins listed in the official Obsidian directory. These policies do not apply to plugins installed outside of the Obsidian directory, but they are nonetheless good practices to follow.
+
 ## Policies
 
 ### Not allowed
@@ -12,6 +14,7 @@ Plugins and themes must not:
 - Insert dynamic ads that are loaded over the internet.
 - Insert static ads outside a plugin’s own interface.
 - Include client-side telemetry.
+- Include a mechanism that updates the plugin.
 - Themes may not load assets from the network. To bundle an asset, see [[Embed fonts and images in your theme|this guide]].
 
 ### Disclosures
@@ -38,7 +41,7 @@ All community plugins and themes must follow these requirements:
 
 If you encounter a plugin or theme that violates the policies above, please let the developer know by opening a GitHub issue in their repository. Kindly check existing issues to see if it’s already reported.
 
-If the developer doesn’t response after 7 days, [contact the Obsidian team](https://help.obsidian.md/Help+and+support#Report+a+security+issue). For serious violations, you can contact our team immediately.
+If the developer doesn’t respond after 7 days, [contact the Obsidian team](https://help.obsidian.md/Help+and+support#Report+a+security+issue). For serious violations, you can contact our team immediately.
 
 ## Removing plugins and themes
 

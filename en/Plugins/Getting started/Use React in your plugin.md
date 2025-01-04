@@ -25,7 +25,7 @@ While you don't need to use a separate framework to build a plugin, there are a 
    ```ts
    {
      "compilerOptions": {
-       "jsx": "preserve"
+       "jsx": "react-jsx"
      }
    }
    ```
@@ -45,12 +45,12 @@ export const ReactView = () => {
 To use the React component, it needs to be mounted on a [[HTML elements]]. The following example mounts the `ReactView` component on the `this.containerEl.children[1]` element:
 
 ```tsx
-import { StrictMode } from "react";
-import { ItemView, WorkspaceLeaf } from "obsidian";
-import { Root, createRoot } from "react-dom/client";
-import { ReactView } from "./ReactView";
+import { StrictMode } from 'react';
+import { ItemView, WorkspaceLeaf } from 'obsidian';
+import { Root, createRoot } from 'react-dom/client';
+import { ReactView } from './ReactView';
 
-const VIEW_TYPE_EXAMPLE = "example-view";
+const VIEW_TYPE_EXAMPLE = 'example-view';
 
 class ExampleView extends ItemView {
 	root: Root | null = null;
@@ -64,7 +64,7 @@ class ExampleView extends ItemView {
 	}
 
 	getDisplayText() {
-		return "Example view";
+		return 'Example view';
 	}
 
 	async onOpen() {
@@ -88,15 +88,15 @@ You can mount your React component on any `HTMLElement`, for example [[Plugins/U
 
 ## Create an App context
 
-If you want to access the [[Reference/TypeScript API/App/App|App]] object from one of your React components, you need to pass it as a dependency. As your plugin grows, even though you're only using the `App` object in a few places, you start passing it through the whole component tree.
+If you want to access the [[Reference/TypeScript API/App|App]] object from one of your React components, you need to pass it as a dependency. As your plugin grows, even though you're only using the `App` object in a few places, you start passing it through the whole component tree.
 
 Another alternative is to create a React context for the app to make it globally available to all components inside your React view.
 
 1. Use `createContext()` to create a new app context.
 
    ```tsx title="context.ts"
-   import { createContext } from "react";
-   import { App } from "obsidian";
+   import { createContext } from 'react';
+   import { App } from 'obsidian';
 
    export const AppContext = createContext<App | undefined>(undefined);
    ```
@@ -115,8 +115,8 @@ Another alternative is to create a React context for the app to make it globally
 3. Create a custom hook to make it easier to use the context in your components.
 
    ```tsx title="hooks.ts"
-   import { useContext } from "react";
-   import { AppContext } from "./context";
+   import { useContext } from 'react';
+   import { AppContext } from './context';
 
    export const useApp = (): App | undefined => {
      return useContext(AppContext);
@@ -126,7 +126,7 @@ Another alternative is to create a React context for the app to make it globally
 4. Use the hook in any React component within `ReactView` to access the app.
 
    ```tsx title="ReactView.tsx"
-   import { useApp } from "./hooks";
+   import { useApp } from './hooks';
 
    export const ReactView = () => {
      const { vault } = useApp();

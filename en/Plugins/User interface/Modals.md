@@ -1,39 +1,27 @@
-Modals display information and accept input from the user. To create a modal, create a class that extends [[Reference/TypeScript API/Modal/Modal|Modal]]:
+Modals display information and accept input from the user. To create a modal, create a class that extends [[Reference/TypeScript API/Modal|Modal]]:
 
 ```ts
-import { App, Modal } from "obsidian";
+import { App, Modal } from 'obsidian';
 
 export class ExampleModal extends Modal {
   constructor(app: App) {
     super(app);
-  }
-
-  onOpen() {
-    let { contentEl } = this;
-    contentEl.setText("Look at me, I'm a modal! 👀");
-  }
-
-  onClose() {
-    let { contentEl } = this;
-    contentEl.empty();
+	this.setContent('Look at me, I\'m a modal! 👀')
   }
 }
 ```
 
-- [[Reference/TypeScript API/View/onOpen|onOpen()]] is called when the modal is opened and is responsible for building the content of your modal. For more information, refer to [HTML elements](HTML%20elements.md).
-- [[Reference/TypeScript API/Modal/onClose|onClose()]] is called when the modal is closed and is responsible for cleaning up any resources used by the modal.
-
 To open a modal, create a new instance of `ExampleModal` and call [[Reference/TypeScript API/Modal/open|open()]] on it:
 
 ```ts
-import { Plugin } from "obsidian";
-import { ExampleModal } from "./modal";
+import { Plugin } from 'obsidian';
+import { ExampleModal } from './modal';
 
 export default class ExamplePlugin extends Plugin {
   async onload() {
     this.addCommand({
-      id: "display-modal",
-      name: "Display modal",
+      id: 'display-modal',
+      name: 'Display modal',
       callback: () => {
         new ExampleModal(this.app).open();
       },
@@ -49,48 +37,35 @@ The modal in the previous example only displayed some text. Let's look at a litt
 ![[modal-input.png]]
 
 ```ts
-import { App, Modal, Setting } from "obsidian";
+import { App, Modal, Setting } from 'obsidian';
 
 export class ExampleModal extends Modal {
-  result: string;
-  onSubmit: (result: string) => void;
-
   constructor(app: App, onSubmit: (result: string) => void) {
     super(app);
-    this.onSubmit = onSubmit;
-  }
+	this.setTitle('What\'s your name?');
 
-  onOpen() {
-    const { contentEl } = this;
-
-    contentEl.createEl("h1", { text: "What's your name?" });
-
-    new Setting(contentEl)
-      .setName("Name")
+	let name = '';
+    new Setting(this.contentEl)
+      .setName('Name')
       .addText((text) =>
         text.onChange((value) => {
-          this.result = value
+          name = value;
         }));
 
-    new Setting(contentEl)
+    new Setting(this.contentEl)
       .addButton((btn) =>
         btn
-          .setButtonText("Submit")
+          .setButtonText('Submit')
           .setCta()
           .onClick(() => {
             this.close();
-            this.onSubmit(this.result);
+            onSubmit(name);
           }));
-  }
-
-  onClose() {
-    let { contentEl } = this;
-    contentEl.empty();
   }
 }
 ```
 
-The result is stored in `this.result` and returned in the `onSubmit` callback when the user clicks **Submit**:
+The result is returned in the `onSubmit` callback when the user clicks **Submit**:
 
 ```ts
 new ExampleModal(this.app, (result) => {
@@ -105,7 +80,7 @@ new ExampleModal(this.app, (result) => {
 ![[suggest-modal.gif]]
 
 ```ts
-import { App, Notice, SuggestModal } from "obsidian";
+import { App, Notice, SuggestModal } from 'obsidian';
 
 interface Book {
   title: string;
@@ -114,16 +89,16 @@ interface Book {
 
 const ALL_BOOKS = [
   {
-    title: "How to Take Smart Notes",
-    author: "Sönke Ahrens",
+    title: 'How to Take Smart Notes',
+    author: 'Sönke Ahrens',
   },
   {
-    title: "Thinking, Fast and Slow",
-    author: "Daniel Kahneman",
+    title: 'Thinking, Fast and Slow',
+    author: 'Daniel Kahneman',
   },
   {
-    title: "Deep Work",
-    author: "Cal Newport",
+    title: 'Deep Work',
+    author: 'Cal Newport',
   },
 ];
 
@@ -137,8 +112,8 @@ export class ExampleModal extends SuggestModal<Book> {
 
   // Renders each suggestion item.
   renderSuggestion(book: Book, el: HTMLElement) {
-    el.createEl("div", { text: book.title });
-    el.createEl("small", { text: book.author });
+    el.createEl('div', { text: book.title });
+    el.createEl('small', { text: book.author });
   }
 
   // Perform action on the selected suggestion.

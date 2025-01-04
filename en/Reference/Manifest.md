@@ -1,5 +1,5 @@
 ---
-cssClass: reference
+cssclasses: reference
 ---
 
 This page describes the schema for the manifest, `manifest.json`.
@@ -26,6 +26,9 @@ The following properties are only available to plugins.
 | `description`   | `string`  | **Yes**  | A description of your plugin.                     |
 | `id`            | `string`  | **Yes**  | The ID of your plugin.                            |
 | `isDesktopOnly` | `boolean` | **Yes**  | Whether your plugin uses NodeJS or Electron APIs. |
+
+> [!note]
+> For local development, the `id` should match the plugin's folder name; otherwise some methods, such as `onExternalSettingsChange`, won't be called.
 
 ## fundingUrl
 

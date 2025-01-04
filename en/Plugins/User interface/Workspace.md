@@ -99,11 +99,11 @@ flowchart TD
 You can access the workspace through the [[App|App]] object. The following example prints the type of every leaf in the workspace:
 
 ```ts
-import { Plugin } from "obsidian";
+import { Plugin } from 'obsidian';
 
 export default class ExamplePlugin extends Plugin {
   async onload() {
-    this.addRibbonIcon("dice", "Print leaf types", () => {
+    this.addRibbonIcon('dice', 'Print leaf types', () => {
       this.app.workspace.iterateAllLeaves((leaf) => {
         console.log(leaf.getViewState().type);
       });
@@ -114,7 +114,7 @@ export default class ExamplePlugin extends Plugin {
 
 ## Leaf lifecycle
 
-Plugins can add leaves of any type to the workspace, as well as define new leaf types through [[Views|custom views]]. Here are a few ways to add a leaf to the workspace. For more ways, refer to [[Reference/TypeScript API/Workspace/Workspace|Workspace]].
+Plugins can add leaves of any type to the workspace, as well as define new leaf types through [[Views|custom views]]. Here are a few ways to add a leaf to the workspace. For more ways, refer to [[Reference/TypeScript API/Workspace|Workspace]].
 
 - If you want to add a new leaf in the root split, use [[getLeaf|getLeaf(true)]].
 - If you want to add a new leaf in any of the side bars, use [[getLeftLeaf|getLeftLeaf()]] and [[getRightLeaf|getRightLeaf()]]. Both let you decide whether to add the leaf to a new split.
@@ -127,8 +127,8 @@ To remove a leaf from the workspace, call [[detach|detach()]] on the leaf you wa
 
 ## Leaf groups
 
-You can create [linked panes](https://help.obsidian.md/User+interface/Workspace/Panes/Linked+pane) by assigning multiple leaves to the same group, using [[setGroup|setGroup()]].
+You can create [linked views](https://help.obsidian.md/User+interface/Tabs#Linked+views) by assigning multiple leaves to the same group, using [[setGroup|setGroup()]].
 
 ```ts
-leaves.forEach((leaf) => leaf.setGroup("group1");
+leaves.forEach((leaf) => leaf.setGroup('group1');
 ```

@@ -6,6 +6,11 @@ Use [[Manifest#fundingUrl|fundingUrl]] if you accept financial support for your 
 
 If you don't accept donations, remove `fundingUrl` from your manifest.
 
+## Set an appropriate `minAppVersion`
+
+The `minAppVersion` in the [[Reference/Manifest|Manifest]] should be set to the minimum required version of the Obsidian app that your plugin is compatible with.
+If you don't know what an appropriate version number is, use the latest stable build number.
+
 ## Keep plugin descriptions short and simple
 
 Good plugin descriptions help users understand your plugin quickly and succinctly. Good descriptions often start with an action statement such as:
@@ -40,4 +45,10 @@ If your plugin uses any of these APIs, you **must** set `isDesktopOnly` to `true
 
 ## Don't include the plugin ID in the command ID
 
-Obsidian automatically prefixes command IDs with your plugin ID. You don't need to include the plugin ID yourself.
+Obsidian automatically prefixes command IDs with your plugin ID.
+You don't need to include the plugin ID yourself.
+
+## Remove all the sample code
+
+The sample plugin includes examples how to do many of the most common things a plugin requires.
+It's only there to get you started, sample code should be removed from your plugin before submission.
