@@ -9,7 +9,7 @@ cssclasses: hide-title
 
 ## Loc.line property
 
-Line number.
+Line number. 0-based.
 
 **Signature:**
 

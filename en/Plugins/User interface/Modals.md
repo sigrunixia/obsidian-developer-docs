@@ -1,4 +1,4 @@
-Modals display information and accept input from the user. To create a modal, create a class that extends [[Reference/TypeScript API/Modal|Modal]]:
+Modals display information and accept user input. To create a modal, create a class that extends [[Reference/TypeScript API/Modal|Modal]]:
 
 ```ts
 import { App, Modal } from 'obsidian';
@@ -32,7 +32,7 @@ export default class ExamplePlugin extends Plugin {
 
 ## Accept user input
 
-The modal in the previous example only displayed some text. Let's look at a little more complex example that handles input from the user.
+Our modal in the previous example only displayed some information. Let's look at a slightly more complex example that also handles user input.
 
 ![[modal-input.png]]
 
@@ -65,7 +65,7 @@ export class ExampleModal extends Modal {
 }
 ```
 
-The result is returned in the `onSubmit` callback when the user clicks **Submit**:
+The result is passed into the `onSubmit` callback when the user clicks **Submit**:
 
 ```ts
 new ExampleModal(this.app, (result) => {
@@ -123,12 +123,16 @@ export class ExampleModal extends SuggestModal<Book> {
 }
 ```
 
-In addition to `SuggestModal`, the Obsidian API provides an even more specialized type of modal for suggestions: the [[FuzzySuggestModal|FuzzySuggestModal]]. While it doesn't give you the same control of how each item is rendered, you get [fuzzy string search](https://en.wikipedia.org/wiki/Approximate_string_matching) out-of-the-box.
+### Approximate string matching results
+
+In addition to `SuggestModal`, the Obsidian API provides an even more specialized type of modal for suggestions: the [[FuzzySuggestModal|FuzzySuggestModal]], which gets you [fuzzy string search](https://en.wikipedia.org/wiki/Approximate_string_matching) out-of-the-box.
 
 ![[fuzzy-suggestion-modal.png]]
 
 ```ts
-export class ExampleModal extends FuzzySuggestModal<Book> {
+import {FuzzySuggestModal, Notice} from "obsidian";
+
+export class ExampleSuggestModal extends FuzzySuggestModal<Book> {
   getItems(): Book[] {
     return ALL_BOOKS;
   }
@@ -140,5 +144,44 @@ export class ExampleModal extends FuzzySuggestModal<Book> {
   onChooseItem(book: Book, evt: MouseEvent | KeyboardEvent) {
     new Notice(`Selected ${book.title}`);
   }
+}
+```
+
+### Custom rendering of fuzzy search results
+
+For a more custom UI you implement the [[Reference/TypeScript API/fuzzysuggestmodal/renderSuggestion|renderSuggestion]] function, like in the earlier example.
+The [[renderResults]] method is responsible for rendering the different strings while highlighting the matched parts.
+
+![[fuzzy-suggestion-custom-modal.png]]
+
+
+```ts
+import {FuzzyMatch, FuzzySuggestModal, Notice, renderResults} from "obsidian";
+
+export class ExampleSuggestModal extends FuzzySuggestModal<Book> {  
+  
+    //return a string representation, so there is something to search  
+    getItemText(item: Book): string {  
+       return item.title + " " + item.author;  
+    }  
+  
+    getItems(): Book[] {  
+       return ALL_BOOKS;  
+    }  
+  
+    renderSuggestion(match: FuzzyMatch<Book>, el: HTMLElement) {  
+       const titleEl = el.createDiv();  
+       renderResults(titleEl, match.item.title, match.match);  
+  
+       // Only render the matches in the author name.  
+       const authorEl = el.createEl('small');  
+       const offset = -(match.item.title.length + 1);  
+       renderResults(authorEl, match.item.author, match.match, offset);  
+    }  
+  
+    onChooseItem(book: Book, evt: MouseEvent | KeyboardEvent): void {  
+       new Notice(`Selected ${book.title}`);  
+    }  
+  
 }
 ```

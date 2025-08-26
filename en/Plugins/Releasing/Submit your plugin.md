@@ -16,6 +16,8 @@ Before you submit your plugin, make sure you have the following files in the roo
 - A `LICENSE` that determines how others are allowed to use the plugin and its source code. If you need help to [add a license](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) for your plugin, refer to [Choose a License](https://choosealicense.com/).
 - A `manifest.json` that describes your plugin. For more information, refer to [[Manifest]].
 
+Also make sure that you follow the [[Developer policies]] and the [[Submission requirements for plugins|submission requirements]] before you submit your plugin.
+
 ## Step 1: Publish your plugin to GitHub
 
 > [!note] Template repositories
@@ -27,7 +29,7 @@ To review your plugin, we need to access to the source code on GitHub. If you're
 
 In this step, you'll prepare a release for your plugin that's ready to be submitted.
 
-1. In `manifest.json`, update `version` to a new version that follows the [Semantic Versioning](https://semver.org/) specification, for example `1.0.0` for your initial release. You can only use numbers and periods (`.`).
+1. In `manifest.json`, update `version` to a new version that follows the [Semantic Versioning](https://semver.org/) specification, for example `1.0.0` for your initial release. Versions supported only in the format `x.y.z`.
 2. [Create a GitHub release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release). The "Tag version" of the release must match the version in your `manifest.json`.
 3. Enter a name for the release, and describe it in the description field. Obsidian doesn't use the release name for anything, so feel free to name it however you like.
 4. Upload the following plugin assets to the release as binary attachments:
@@ -76,6 +78,10 @@ Once your submission is ready for review, you can sit back and wait for the Obsi
 
 > [!question] How long does it take to review my plugin?
 > The time it takes to review your submission depends on the current workload of the Obsidian team. The team is still small, so please be patient while you wait for your plugin to be reviewed. We're currently unable to give any estimates on when we'll be able to review your submission.
+
+> [!warning] Ignore merge conflicts
+> If you see in your PR GitHub's warning `This branch has conflicts that must be resolved`, just ignore it. Don't merge or rebase your PR.
+> Once your plugin passes all reviews, the Obsidian team will resolve those conflicts before publishing your plugin.
 
 ## Step 4: Address review comments
 
